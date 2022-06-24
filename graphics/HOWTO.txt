@@ -1,0 +1,54 @@
+HOW TO generate ETo weather graphics
+
+Requisites:
+ - functioning POLI environment
+   - not necessary if just working with a given ".csv" file
+   
+ - python3-matplotlib
+   - with GUI (Linux MATE, Gnone, etc.) use a package manager
+   - or, in terminal:
+     > sudo apt-get install python3-matplotlib
+
+
+From scratch:
+   Collect the data to use.
+   Edit ../collect_data.py and specify dates to use and output file.
+   For example:
+
+   datapath = '../dates/jan-mar_2019.txt'  # point to WRF output data
+   outpath = './jan-mar_2019.npy'
+
+   > ./collect_data.py
+   
+   Description: Collects the necessary raw WRF data, makes hourly averages,
+                converts to actual ETo values, and normalizes the values.
+		Dates to process are given in jan-mar_2019.txt Produces the
+		file jan-mar_2019.npy (2GB, not in this tarball).
+
+   > ./pixval.py
+
+   Description: Extracts the specified pixel values from jan-mar_2019.npy
+                and creates the file jan-mar_2019.csv. We are extracting 6
+		pixels from the top row (Jan. 1) of the appended numpy file.
+		For coherent display later, pixels selected should
+		have the same Y values.
+
+Graphics:
+
+   > ./plot_buffers.py
+
+   Description: Show the flattened buffers in 3D space. X and Y corresponds to
+                the WRF pixel space (171x171) and Z is the normalized
+		variable space. Origin is top left corner. Buffer colors are
+		the same as in plot_pixels.py
+
+  > ./plot_pixels.py
+
+  Description: Plot variable values as bars on the row given in jan-mar_2019.csv
+               A span of hours can be specified. The csv file contains 24 hours
+	       worth of data for each pixel (192 components). To change the
+	       span change the "start" and "end" variables in the script.
+
+  Notes: The single hour span will generate variable labels. The 4 and 24 hour
+         spans do not have labels because there are too many components for
+	 a clean render.
